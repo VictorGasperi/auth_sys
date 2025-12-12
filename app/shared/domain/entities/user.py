@@ -10,20 +10,11 @@ class User(BaseModel):
     is_active: bool = True
     created_at_ms: int
 
-
-def new(
-    id: str,
-    email: str,
-    hashed_password: str,
-    role: ROLE,
-    is_active: bool,
-    now_ms: int
-) -> "User":
-    return User(
-        id=id,
-        email=email,
-        hashed_password=hashed_password,
-        role=role,
-        is_active=is_active,
-        created_at_ms=now_ms
-    )
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "role": self.role,
+            "is_active": self.is_active,
+            "created_at_ms": self.created_at_ms
+        }
