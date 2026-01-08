@@ -38,10 +38,10 @@ class Environments:
     @staticmethod
     def get_user_repo() -> IUserRepository:
         if Environments.get_envs().stage == STAGE.TEST:
-            from app.shared.infra.repository.user_repository_mock import UserRepositoryMock
+            from app.shared.infra.repository.adapters.user_repository_mock import UserRepositoryMock
             return UserRepositoryMock
         elif Environments.get_envs().stage == STAGE.DEV:
-            from app.shared.infra.repository.user_repository_pgsql import UserRepositoryPgsql
+            from app.shared.infra.repository.adapters.user_repository_pgsql import UserRepositoryPgsql
             return UserRepositoryPgsql
         else:
             raise Exception(f"No repository found for the stage '{Environments.get_envs().stage}'")

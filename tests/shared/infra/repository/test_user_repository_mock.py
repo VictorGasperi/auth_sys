@@ -1,5 +1,5 @@
 import pytest
-from app.shared.infra.repository.user_repository_mock import UserRepositoryMock
+from app.shared.infra.repository.adapters.user_repository_mock import UserRepositoryMock
 from app.shared.domain.entities.user import User
 from app.shared.domain.enums.role import ROLE
 

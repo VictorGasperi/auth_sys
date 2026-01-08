@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-
 from app.shared.domain.enums.role import ROLE
 
 class User(BaseModel):
