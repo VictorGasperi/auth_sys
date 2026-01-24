@@ -7,7 +7,7 @@ repo = Environments.get_user_repo()()
 usecase = GetAllUseCase(user_repository=repo)
 controller = GetAllController(usecase=usecase)
 
-def handler(request: Request):
+def get_all_handler(request: Request):
 
     response = controller(request)
     return response
