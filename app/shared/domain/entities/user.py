@@ -17,3 +17,8 @@ class User(BaseModel):
             "is_active": self.is_active,
             "created_at_ms": self.created_at_ms
         }
+
+class CreateUser(BaseModel):
+    email: str
+    password: str
+    role: ROLE
