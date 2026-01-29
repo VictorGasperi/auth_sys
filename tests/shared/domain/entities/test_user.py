@@ -69,7 +69,7 @@ class TestUser:
         assert "created_at_ms" in user_dict
         
         assert user_dict["email"] == "test@example.com"
-        assert user_dict["role"] == ROLE.USER
+        assert user_dict["role"] == ROLE.USER.value
         assert user_dict["is_active"] is True
 
     def test_user_to_dict_excludes_hashed_password(self):

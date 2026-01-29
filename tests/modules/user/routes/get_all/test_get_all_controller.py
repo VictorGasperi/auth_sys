@@ -4,15 +4,15 @@ from app.modules.user.routes.get_all.get_all_usecase import GetAllUseCase
 from app.modules.user.routes.get_all.get_all_viewmodel import GetAllViewModel
 from app.shared.domain.entities.user import User
 from app.shared.domain.enums.role import ROLE
-from app.shared.environments import Environments
+from app.shared.infra.repository.adapters.user_repository_mock import UserRepositoryMock
 from fastapi import HTTPException
 
 
 class TestGetAllController:
     @pytest.fixture
     def user_repository(self):
-        """Get the user repository from Environments"""
-        return Environments.get_user_repo()()
+        """Get the user repository mock"""
+        return UserRepositoryMock()
 
     @pytest.fixture
     def use_case(self, user_repository):
@@ -112,15 +112,15 @@ class TestGetAllController:
         """Test that admin user has ADMIN role"""
         result = controller(None)
         admin = [user for user in result["users"] if user["email"] == "admin@example.com"][0]
-        assert admin["role"] == ROLE.ADMIN
+        assert admin["role"] == ROLE.ADMIN.value
 
     def test_call_regular_users_have_user_role(self, controller):
         """Test that regular users have USER role"""
         result = controller(None)
         user1 = [user for user in result["users"] if user["email"] == "user1@example.com"][0]
         user2 = [user for user in result["users"] if user["email"] == "user2@example.com"][0]
-        assert user1["role"] == ROLE.USER
-        assert user2["role"] == ROLE.USER
+        assert user1["role"] == ROLE.USER.value
+        assert user2["role"] == ROLE.USER.value
 
     def test_call_admin_is_active(self, controller):
         """Test that admin user is active"""
@@ -238,7 +238,7 @@ class TestGetAllController:
     def test_incorrect_admin_count(self, controller):
         """Test that asserting wrong admin count fails - validates 1 admin"""
         result = controller(None)
-        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN]
+        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN.value]
         
         # Should NOT be these counts
         assert len(admin_users) != 0
@@ -248,7 +248,7 @@ class TestGetAllController:
     def test_incorrect_regular_user_count(self, controller):
         """Test that asserting wrong regular user count fails - validates 2 users"""
         result = controller(None)
-        regular_users = [user for user in result["users"] if user["role"] == ROLE.USER]
+        regular_users = [user for user in result["users"] if user["role"] == ROLE.USER.value]
         
         # Should NOT be these counts
         assert len(regular_users) != 0

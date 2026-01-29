@@ -2,14 +2,14 @@ import pytest
 from app.modules.user.routes.get_all.get_all_usecase import GetAllUseCase
 from app.shared.domain.entities.user import User
 from app.shared.domain.enums.role import ROLE
-from app.shared.environments import Environments
+from app.shared.infra.repository.adapters.user_repository_mock import UserRepositoryMock
 
 
 class TestGetAllUseCase:
     @pytest.fixture
     def user_repository(self):
-        """Get the user repository from Environments"""
-        return Environments.get_user_repo()()
+        """Get the user repository mock"""
+        return UserRepositoryMock()
 
     @pytest.fixture
     def use_case(self, user_repository):

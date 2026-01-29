@@ -13,7 +13,7 @@ class User(BaseModel):
         return {
             "id": self.id,
             "email": self.email,
-            "role": self.role,
+            "role": self.role.value,
             "is_active": self.is_active,
             "created_at_ms": self.created_at_ms
         }

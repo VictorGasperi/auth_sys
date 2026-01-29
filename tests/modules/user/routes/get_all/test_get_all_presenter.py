@@ -3,7 +3,6 @@ from app.modules.user.routes.get_all import get_all_presenter
 from app.modules.user.routes.get_all.get_all_controller import GetAllController
 from app.modules.user.routes.get_all.get_all_usecase import GetAllUseCase
 from app.shared.domain.enums.role import ROLE
-from app.shared.environments import Environments
 
 
 class TestGetAllPresenter:
@@ -27,7 +26,7 @@ class TestGetAllPresenter:
 
     def test_presenter_has_handler_function(self):
         """Test that presenter module has handler function"""
-        assert hasattr(get_all_presenter, "handler")
+        assert hasattr(get_all_presenter, "get_all_handler")
         assert callable(get_all_presenter.get_all_handler)
 
     def test_presenter_usecase_is_get_all_usecase_instance(self):
@@ -103,15 +102,15 @@ class TestGetAllPresenter:
         """Test that admin user has ADMIN role"""
         result = get_all_presenter.get_all_handler(None)
         admin = [user for user in result["users"] if user["email"] == "admin@example.com"][0]
-        assert admin["role"] == ROLE.ADMIN
+        assert admin["role"] == ROLE.ADMIN.value
 
     def test_handler_regular_users_have_user_role(self):
         """Test that regular users have USER role"""
         result = get_all_presenter.get_all_handler(None)
         user1 = [user for user in result["users"] if user["email"] == "user1@example.com"][0]
         user2 = [user for user in result["users"] if user["email"] == "user2@example.com"][0]
-        assert user1["role"] == ROLE.USER
-        assert user2["role"] == ROLE.USER
+        assert user1["role"] == ROLE.USER.value
+        assert user2["role"] == ROLE.USER.value
 
     def test_handler_admin_is_active(self):
         """Test that admin user is active"""
@@ -249,7 +248,7 @@ class TestGetAllPresenter:
     def test_incorrect_admin_count_in_handler(self):
         """Test that asserting wrong admin count fails - validates 1 admin"""
         result = get_all_presenter.get_all_handler(None)
-        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN]
+        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN.value]
         
         # Should NOT be these counts
         assert len(admin_users) != 0
@@ -259,7 +258,7 @@ class TestGetAllPresenter:
     def test_incorrect_regular_user_count_in_handler(self):
         """Test that asserting wrong regular user count fails - validates 2 users"""
         result = get_all_presenter.get_all_handler(None)
-        regular_users = [user for user in result["users"] if user["role"] == ROLE.USER]
+        regular_users = [user for user in result["users"] if user["role"] == ROLE.USER.value]
         
         # Should NOT be these counts
         assert len(regular_users) != 0
@@ -286,7 +285,7 @@ class TestGetAllPresenter:
     def test_incorrect_admin_email_in_handler(self):
         """Test that asserting wrong admin email fails - validates admin@example.com"""
         result = get_all_presenter.get_all_handler(None)
-        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN]
+        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN.value]
         
         # Admin email should NOT be these values
         assert admin_users[0]["email"] != "wrongadmin@example.com"
@@ -334,8 +333,8 @@ class TestGetAllPresenter:
         roles = [user["role"] for user in result["users"]]
         
         # Should NOT all be the same role
-        assert not all(role == ROLE.ADMIN for role in roles)
-        assert not all(role == ROLE.USER for role in roles)
+        assert not all(role == ROLE.ADMIN.value for role in roles)
+        assert not all(role == ROLE.USER.value for role in roles)
 
     def test_all_users_not_having_same_status_in_handler(self):
         """Test that not all users have same status - validates status diversity"""

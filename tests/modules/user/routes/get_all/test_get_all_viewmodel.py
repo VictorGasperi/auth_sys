@@ -3,14 +3,14 @@ from app.modules.user.routes.get_all.get_all_viewmodel import GetAllViewModel
 from app.modules.user.routes.get_all.get_all_usecase import GetAllUseCase
 from app.shared.domain.entities.user import User
 from app.shared.domain.enums.role import ROLE
-from app.shared.environments import Environments
+from app.shared.infra.repository.adapters.user_repository_mock import UserRepositoryMock
 
 
 class TestGetAllViewModel:
     @pytest.fixture
     def user_repository(self):
-        """Get the user repository from Environments"""
-        return Environments.get_user_repo()()
+        """Get the user repository mock"""
+        return UserRepositoryMock()
 
     @pytest.fixture
     def use_case(self, user_repository):
@@ -134,15 +134,15 @@ class TestGetAllViewModel:
         """Test that admin user has ADMIN role in to_dict"""
         result = viewmodel.to_dict()
         admin = [user for user in result["users"] if user["email"] == "admin@example.com"][0]
-        assert admin["role"] == ROLE.ADMIN
+        assert admin["role"] == ROLE.ADMIN.value
 
     def test_to_dict_regular_users_have_user_role(self, viewmodel):
         """Test that regular users have USER role in to_dict"""
         result = viewmodel.to_dict()
         user1 = [user for user in result["users"] if user["email"] == "user1@example.com"][0]
         user2 = [user for user in result["users"] if user["email"] == "user2@example.com"][0]
-        assert user1["role"] == ROLE.USER
-        assert user2["role"] == ROLE.USER
+        assert user1["role"] == ROLE.USER.value
+        assert user2["role"] == ROLE.USER.value
 
     def test_to_dict_admin_is_active(self, viewmodel):
         """Test that admin user is active in to_dict"""
@@ -345,7 +345,7 @@ class TestGetAllViewModel:
     def test_incorrect_admin_count_in_dict(self, viewmodel):
         """Test that asserting wrong admin count fails - validates 1 admin"""
         result = viewmodel.to_dict()
-        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN]
+        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN.value]
         
         # Should NOT be these counts
         assert len(admin_users) != 0
@@ -355,7 +355,7 @@ class TestGetAllViewModel:
     def test_incorrect_regular_user_count_in_dict(self, viewmodel):
         """Test that asserting wrong regular user count fails - validates 2 users"""
         result = viewmodel.to_dict()
-        regular_users = [user for user in result["users"] if user["role"] == ROLE.USER]
+        regular_users = [user for user in result["users"] if user["role"] == ROLE.USER.value]
         
         # Should NOT be these counts
         assert len(regular_users) != 0
@@ -385,7 +385,7 @@ class TestGetAllViewModel:
     def test_incorrect_admin_email_in_dict(self, viewmodel):
         """Test that asserting wrong admin email fails - validates admin@example.com"""
         result = viewmodel.to_dict()
-        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN]
+        admin_users = [user for user in result["users"] if user["role"] == ROLE.ADMIN.value]
         
         # Admin email should NOT be these values
         assert admin_users[0]["email"] != "wrongadmin@example.com"
